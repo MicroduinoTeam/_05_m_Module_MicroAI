@@ -7,7 +7,7 @@
 #include <SoftwareSerial.h>
 #endif
 
-#define DEBUG
+//#define DEBUG
 
 #define MICRO_AI_VERSION  "1.0.1"
 

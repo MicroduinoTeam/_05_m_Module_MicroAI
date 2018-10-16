@@ -6,7 +6,7 @@
 #define MQTTSERVER   "mqtt://mCotton.microduino.cn"
 #define ID   "58f881ae42c66e00013cf445"
 #define USER   "58f881ae42c66e00013cf445"
-#define PASS   "4KOaAZ3Ng3e5CMD9f5SUB5O7Ag85HX2X"
+#define PASS   "Secure Token"
 #define SUBSCRIBTOPIC   "ca/58f881ae42c66e00013cf445"
 #define SUBSCRIBTOPICP   "cp/58f881ae42c66e00013cf445"
 #define PUBLISHTOPIC   "dp/58f881ae42c66e00013cf445"
@@ -23,47 +23,47 @@ void setup() {
   Serial.begin(115200);
 
   Serial.print("MicroAi set mode: MQTT.");
-  Serial.println("start initiation. ");     
-  if(mAi.begin(MODE_MQTT)){
-    Serial.println("init OK!");  
-  }else{
+  Serial.println("start initiation. ");
+  if (mAi.begin(MODE_MQTT)) {
+    Serial.println("init OK!");
+  } else {
     Serial.println("init failed!");
-    while(1);  
+    while (1);
   }
-  
-  if(mAi.setWifi(WIFI_SSID, WIFI_PWD)){
-    Serial.println("set wifi ssid and password OK!");  
-  }else{
+
+  if (mAi.setWifi(WIFI_SSID, WIFI_PWD)) {
+    Serial.println("set wifi ssid and password OK!");
+  } else {
     Serial.println("set wifi ssid and password failed!");
-    while(1);  
+    while (1);
   }
-  Serial.print("wifi connecting"); 
-  while(mAi.getRssi()==0){
-    Serial.print("."); 
+  Serial.print("wifi connecting");
+  while (mAi.getRssi() == 0) {
+    Serial.print(".");
     delay(1000);
   }
-  Serial.println("\r\nwifi connected.");     
+  Serial.println("\r\nwifi connected.");
 
   if (mAi.mqttSetServer(MQTTSERVER)) {
     Serial.println(F("set mqtt server OK!"));
   } else {
     Serial.println(F("set mqtt server failed!"));
-    while(1);  
+    while (1);
   }
 
   if (mAi.mqttConnect(ID, USER, PASS)) {
     Serial.println(F("set mqtt connect params OK!"));
   } else {
     Serial.println(F("set mqtt connect params failed!"));
-    while(1);  
+    while (1);
   }
 
-  Serial.print("mqtt server connecting"); 
-  while(mAi.mqttGetStatus()<=0){
-    Serial.print("."); 
+  Serial.print("mqtt server connecting");
+  while (mAi.mqttGetStatus() <= 0) {
+    Serial.print(".");
     delay(1000);
   }
-  Serial.println("\r\nmqtt server connected.");    
+  Serial.println("\r\nmqtt server connected.");
 
   if (mAi.mqttSetSubscrib(SUBSCRIBTOPIC)) {
     Serial.println(F("set mqtt subscrib ca topic OK!"));
@@ -89,12 +89,12 @@ void setup() {
 
 void loop() {
 
-  if(mAi.mqttQuery(strBuf)>0){
+  if (mAi.mqttQuery(strBuf) > 0) {
     Serial.print("recv: ");
     Serial.println(strBuf);
   }
-  
-  if (mAi.mqttGetStatus()>1) {
+
+  if (mAi.mqttGetStatus() > 0) {
     if (sensorlastTime > millis())
       sensorlastTime = millis();
     if (millis() - sensorlastTime > INTERVAL_sensor) {
@@ -109,8 +109,12 @@ void loop() {
       jsonData += String(lightness);
       jsonData += "}";
 
-      int str_len = jsonData.length() + 1; 
+      //jsonData = "{\"Humidity\":\"mCookie\"}";
+
+      int str_len = jsonData.length() + 1;
       jsonData.toCharArray(strBuf, str_len);
+
+      // Serial.println(strBuf);
 
       if (mAi.mqttPublish(PUBLISHTOPIC, strBuf)) {
         Serial.println(F("mqtt publish OK!"));
@@ -122,8 +126,3 @@ void loop() {
   }
   delay(100);
 }
-
-
-
-
-

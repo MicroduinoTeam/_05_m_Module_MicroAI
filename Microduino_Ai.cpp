@@ -373,9 +373,11 @@ bool MicroAi::mqttSetSubscrib(char* sub) {
 bool MicroAi::mqttPublish(char* pub, char* msg) {
   write("AT+MQPUB=\"");
   write(pub);
-  write("\",\"");
+  //write("\",\"");
+  write("\",");
   write(msg);
-  write("\"\r\n");
+  //write("\"\r\n");
+  write("\r\n");
   return (recvWait(1000, "OK") != NULL);
 }
 
